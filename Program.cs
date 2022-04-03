@@ -53,8 +53,36 @@ namespace BlogsConsole
                         db.AddBlog(blog);
                         logger.Info("Blog added - {name}", name);
 
-                        // Display all Blogs from the database
-                        var query = db.Blogs.OrderBy(b => b.Name);
+                    }
+                        catch (Exception ex)
+                    {
+                        logger.Error(ex.Message);
+                    }
+                }
+
+                if (choose == "3") {
+                    try
+                    {
+
+                        Console.Write("Enter the blog you want to post to: ");
+                        var blogName = Console.ReadLine();
+
+                        var db = new BloggingContext();
+
+                        var blogChoice = db.Blogs.Where(b => b.Name.Equals(blogName, StringComparison.OrdinalIgnoreCase));
+
+                        int blogID = blogChoice.;
+
+                        Console.Write("Enter the title of the post: ");
+                        var title = Console.ReadLine();
+
+                        Console.Write("Enter the content of the post: ");
+                        var content = Console.ReadLine();
+
+                        var post = new Post { Title = title, Content = content, };
+
+                        db.AddBlog(post);
+                        logger.Info("Blog added - {name}", name);
 
                     }
                         catch (Exception ex)
