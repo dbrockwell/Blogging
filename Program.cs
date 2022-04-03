@@ -22,6 +22,23 @@ namespace BlogsConsole
             if (choose == "1") {
                 try
                 {
+                    var db = new BloggingContext();
+                    var query = db.Blogs.OrderBy(b => b.Name);
+                    Console.WriteLine("All blogs in the database:");
+                    foreach (var item in query)
+                    {
+                        Console.WriteLine(item.Name);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex.Message);
+                }
+            }
+
+            if (choose == "2") {
+                try
+                {
 
                     // Create and save a new Blog
                     Console.Write("Enter a name for a new Blog: ");
@@ -38,23 +55,6 @@ namespace BlogsConsole
 
                 }
                     catch (Exception ex)
-                {
-                    logger.Error(ex.Message);
-                }
-            }
-
-            if (choose == "2") {
-                try
-                {
-                    var db = new BloggingContext();
-                    var query = db.Blogs.OrderBy(b => b.Name);
-                    Console.WriteLine("All blogs in the database:");
-                    foreach (var item in query)
-                    {
-                        Console.WriteLine(item.Name);
-                    }
-                }
-                catch (Exception ex)
                 {
                     logger.Error(ex.Message);
                 }
