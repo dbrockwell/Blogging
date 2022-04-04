@@ -128,6 +128,27 @@ namespace BlogsConsole
                         logger.Error(ex.Message);
                     }
                 }
+
+                if (choose == "4") {
+                    try {
+                        var db = new BloggingContext();
+                        var blogQuery = db.Blogs.OrderBy(b => b.Name);
+                        Console.WriteLine("All posts in the database:");
+                        foreach (var item in blogQuery)
+                        {
+                            Console.WriteLine(item.Name);
+                            var postQuery = db.Posts.Where(p => p.BlogId == item.BlogId).OrderBy(b => b.Title);
+                            foreach (var post in postQuery)
+                            {
+                                Console.WriteLine($"\t{post.Title} -- {post.Content}");
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error(ex.Message);
+                    }
+                }
             } while (choose == "1" || choose == "2" || choose == "3" || choose == "4");
 
             logger.Info("Program ended");
