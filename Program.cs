@@ -65,39 +65,23 @@ namespace BlogsConsole
                     {
 
                         Console.Write("Enter the blog you want to post to: ");
-                        var blogName = Console.ReadLine();
+                        string blogName = Console.ReadLine();
 
                         var db = new BloggingContext();
-
-                        var blogChoice = db.Blogs.Where(b => b.Name.Contains(blogName, StringComparison.OrdinalIgnoreCase));
-                        int blogChoiceNumber = blogChoice.Count();
                         int IDEntery = 0;
-        
-                        if (blogChoiceNumber > 1) {
-                            Console.WriteLine($"There are {blogChoiceNumber} blogs that contains your search");
-                            Console.WriteLine("Enter the id of the blog you want to post to:");
-                            foreach (var item in blogChoice)
-                            {
-                                Console.WriteLine(blogChoice);
-                            }
-                            try {
-                                Console.Write("Enter Blog ID: ");
-                                IDEntery = Int32.Parse(Console.ReadLine());
-                            }
-                            catch (Exception) {
-                                logger.Error("ID entered was not a number");
-                            }
+
+                        try
+                        {
+                        var blogChoice = db.Blogs.First(b => b.Name == blogName);
+                        Console.WriteLine($"One blog was found with the name of \"{blogChoice.Name}\"");
+                        Console.Write("Would you like to post to this blog (Y/N): ");
+                        string wouldContinue = Console.ReadLine();
+                        if (wouldContinue.ToUpper() == "Y") {
+                            IDEntery = blogChoice.BlogId;
                         }
-                        else if (blogChoiceNumber == 1) {
-                            var onlyChoice = db.Blogs.First(b => b.Name.Contains(blogName, StringComparison.OrdinalIgnoreCase));
-                            Console.WriteLine($"One blog was found with the name of \"{onlyChoice.Name}\"");
-                            Console.Write("Would you like to post to this blog (Y/N): ");
-                            string wouldContinue = Console.ReadLine();
-                            if (wouldContinue.ToUpper() == "Y") {
-                                IDEntery = onlyChoice.BlogId;
-                            }
                         }
-                        else {
+                        catch
+                        {
                             Console.WriteLine($"No blog found with the name of \"{blogName}\"");
                         }
 
@@ -132,16 +116,11 @@ namespace BlogsConsole
                 if (choose == "4") {
                     try {
                         var db = new BloggingContext();
-                        var blogQuery = db.Blogs.OrderBy(b => b.Name);
+                        var post = db.Posts;
                         Console.WriteLine("All posts in the database:");
-                        foreach (var item in blogQuery)
+                        foreach (var item in post)
                         {
-                            Console.WriteLine(item.Name);
-                            var postQuery = db.Posts.Where(p => p.BlogId == item.BlogId).OrderBy(b => b.Title);
-                            foreach (var post in postQuery)
-                            {
-                                Console.WriteLine($"\t{post.Title} -- {post.Content}");
-                            }
+                            Console.WriteLine($"\t{item.Title} -- {item.Content}");
                         }
                     }
                     catch (Exception ex)
