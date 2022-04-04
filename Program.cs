@@ -114,8 +114,8 @@ namespace BlogsConsole
 
                             var post = new Post { Title = title, Content = content, BlogId = blogID, Blog = finalBlog};
 
-                            db.AddBlog(post);
-                            logger.Info("Blog added - {name}", name);
+                            db.AddPost(post);
+                            logger.Info("Post added to blog - {name} | Post title - {title}", finalBlog.Name, title);
                         }
                         catch (Exception ex)
                         {
