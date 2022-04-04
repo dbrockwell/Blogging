@@ -69,23 +69,61 @@ namespace BlogsConsole
 
                         var db = new BloggingContext();
 
-                        var blogChoice = db.Blogs.Where(b => b.Name.Equals(blogName, StringComparison.OrdinalIgnoreCase));
+                        var blogChoice = db.Blogs.Where(b => b.Name.Contains(blogName, StringComparison.OrdinalIgnoreCase));
+                        int blogChoiceNumber = blogChoice.Count();
+                        int IDEntery = 0;
+        
+                        if (blogChoiceNumber > 1) {
+                            Console.WriteLine($"There are {blogChoiceNumber} blogs that contains your search");
+                            Console.WriteLine("Enter the id of the blog you want to post to:");
+                            foreach (var item in blogChoice)
+                            {
+                                Console.WriteLine(blogChoice);
+                            }
+                            try {
+                                Console.Write("Enter Blog ID: ");
+                                IDEntery = Int32.Parse(Console.ReadLine());
+                            }
+                            catch (Exception) {
+                                logger.Error("ID entered was not a number");
+                            }
+                        }
+                        else if (blogChoiceNumber == 1) {
+                            var onlyChoice = db.Blogs.First(b => b.Name.Contains(blogName, StringComparison.OrdinalIgnoreCase));
+                            Console.WriteLine($"One blog was found with the name of \"{onlyChoice.Name}\"");
+                            Console.Write("Would you like to post to this blog (Y/N): ");
+                            string wouldContinue = Console.ReadLine();
+                            if (wouldContinue.ToUpper() == "Y") {
+                                IDEntery = onlyChoice.BlogId;
+                            }
+                        }
+                        else {
+                            Console.WriteLine($"No blog found with the name of \"{blogName}\"");
+                        }
 
-                        int blogID = blogChoice.;
+                        try {
+                            var finalBlog = db.Blogs.First(b => b.BlogId == IDEntery);
 
-                        Console.Write("Enter the title of the post: ");
-                        var title = Console.ReadLine();
+                            int blogID = finalBlog.BlogId;
 
-                        Console.Write("Enter the content of the post: ");
-                        var content = Console.ReadLine();
+                            Console.Write("Enter the title of the post: ");
+                            var title = Console.ReadLine();
 
-                        var post = new Post { Title = title, Content = content, };
+                            Console.Write("Enter the content of the post: ");
+                            var content = Console.ReadLine();
 
-                        db.AddBlog(post);
-                        logger.Info("Blog added - {name}", name);
+                            var post = new Post { Title = title, Content = content, BlogId = blogID, Blog = finalBlog};
+
+                            db.AddBlog(post);
+                            logger.Info("Blog added - {name}", name);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Error(ex.Message);
+                        }
 
                     }
-                        catch (Exception ex)
+                    catch (Exception ex)
                     {
                         logger.Error(ex.Message);
                     }
